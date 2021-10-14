@@ -1,0 +1,160 @@
+{% csrf_token %}
+{% block title %}
+Login Page
+{% endblock %}
+{% block content %}
+
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+ <!-- Bootstrap CSS -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+ {% load static %}
+ <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+ <link rel="stylesheet" href="{% static 'assets/icofont/icofont.min.css' %}">
+
+<style>
+.container-2 {
+	background-color: #0D0208;
+	border-radius: 10px;
+	box-shadow: 0 1px 3 rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+	position:absolute;
+	overflow: hidden;
+	width: 400px;
+	max-width: 100%;
+	min-height: 560px;
+	margin-top: 100px;
+	margin-left: 35%;
+    
+    
+	
+}
+
+.container-2:hover{
+box-shadow: 0 30px 48px ,#00A300 0 40px 40px #00A300;
+}
+
+body{
+    margin: -15;
+    font-family: Hack, monospace;
+    
+}
+
+</style>
+
+<div class="menu">
+
+    <div class="bar"></div>
+    
+    </div>
+    
+    <div class="overlay"></div>
+
+
+<nav>
+    <span class="brand">Graphocal Password authertication</span>
+    <ul>
+    <li class="nav-item">
+        <a href="{% url 'home' %}" class="nav-link" data-text="Home">Home</a>
+    </li>
+    <li class="nav-item">
+            <a href="{% url 'register' %}" class="nav-link" data-text="Registation">Registration</a>
+        </li>
+    <li class="nav-item">
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="nav-link" data-text="logout">Logout</a>
+    
+                {% else %}
+                <a href="{% url 'login' %}" class="nav-link" data-text="login">Login</a>
+                {% endif %}
+                </li>
+    
+                <li class="nav-item">
+                  <a href="{% url 'reset' %}" class="nav-link" data-text="password reset">Password reset</a>
+              
+                  </li>
+    </ul>
+    </nav>
+<div class="container-2">
+    <div class="content-section" >
+<form class="" action="" method="post" id="post-form" style="background-color: #0D0208;">
+<h2  style="color: #008F11;font-weight: bold;font-family: Hack, monospace">Log in</h2>
+<input type="text" placeholder="Enter username" id="username" required>
+           <br>
+            {% include 'pwd.html' %}
+            
+<button type="submit" class="fill">Log in</button>
+
+</form>
+<br>
+<span  style="color:#008F11;padding:50px;font-size:medium;font-weight: bold;font-family: Hack, monospace">Don't have an account?<a  style="font-family: Hack, monospace"  href="{% url 'register' %}" class="ml-2">Sign Up</a></span>
+         </div>  
+  {% if messages %}
+    {% for message in messages %}
+    <script>
+      swal("{{message.tags}}", "{{message}}", "{{message.tags}}")
+
+      </script>
+</div>
+    {% endfor %}
+    {% endif %}
+    {% endblock %}
+
+<script>
+    var gpwd_set = new Set();
+
+    function onSelect(r, c) {
+        var res = r.toString() + c.toString();
+        if (gpwd_set.has(res)) {
+            console.log('true');
+            gpwd_set.delete(res);
+        } else {
+            gpwd_set.add(res);
+        }
+
+        console.log(gpwd_set);
+    }
+
+    function post(path, params, method = 'post') {
+
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        const form = document.getElementById('post-form');
+        form.method = method;
+        form.action = path;
+
+        for (const key in params) {
+            if (params.hasOwnProperty(key)) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = key;
+                hiddenField.value = params[key];
+
+                form.appendChild(hiddenField);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
+    // Submit post on submit
+    var form = document.getElementById('post-form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        console.log("form submitted!");
+        post('', {
+            username: document.getElementById('username').value,
+            password: Array.from(gpwd_set),
+        })
+    });
+</script>
+
+

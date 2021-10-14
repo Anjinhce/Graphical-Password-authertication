@@ -1,0 +1,15 @@
+python manage.py migrate
+create admin account
+
+python manage.py createsuperuser
+then
+
+python manage.py makemigrations ig_miner_app
+to makemigrations for the app
+
+then again run
+
+python manage.py migrate
+to start the development server
+
+python manage.py runserver
